@@ -6,7 +6,7 @@ on:
         type: boolean
         required: false
         default: true
-
+  push:
   workflow_dispatch:
 
 jobs:

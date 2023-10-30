@@ -27,12 +27,12 @@ rv-brand = "ReVanced Extended"
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube/"
 
-[YouTube-ReX]
-app-name = "YouTube Rex"
+[YouTube-RV]
+app-name = "YouTube"
 patches-source = "https://github.com/YT-Advanced/ReX-patches"
 integrations-source = "https://github.com/YT-Advanced/ReX-integrations"
 cli-source = "inotia00/revanced-cli"
-rv-brand = "ReVanced ReX"
+rv-brand = "ReVanced Extended"
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/google-inc/youtube/"
 
