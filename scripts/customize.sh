@@ -10,28 +10,16 @@ elif [ $ARCH = "arm64" ]; then
 	#arm64
 	ARCH_LIB=arm64-v8a
 	alias cmpr='$MODPATH/bin/arm64/cmpr'
-elif [ $ARCH = "x86" ]; then
-	ARCH_LIB=x86
-	alias cmpr='$MODPATH/bin/x86/cmpr'
-elif [ $ARCH = "x64" ]; then
-	ARCH_LIB=x86_64
-	alias cmpr='$MODPATH/bin/x64/cmpr'
 else
 	abort "ERROR: unsupported arch: ${ARCH}"
 fi
 set_perm_recursive $MODPATH/bin 0 0 0755 0777
 
-if su -M -c true >/dev/null 2>/dev/null; then
-	alias mm='su -M -c'
-else
-	alias mm='nsenter -t1 -m'
-fi
-
-mm grep __PKGNAME /proc/mounts | while read -r line; do
+nsenter -t1 -m -- grep __PKGNAME /proc/mounts | while read -r line; do
 	ui_print "* Un-mount"
 	mp=${line#* }
 	mp=${mp%% *}
-	mm umount -l ${mp%%\\*}
+	nsenter -t1 -m -- umount -l "${mp%%\\*}"
 done
 am force-stop __PKGNAME
 
@@ -124,7 +112,7 @@ mkdir -p $NVBASE/rvhc
 RVPATH=$NVBASE/rvhc/${MODPATH##*/}.apk
 mv -f $MODPATH/base.apk $RVPATH
 
-if ! op=$(mm mount -o bind $RVPATH $BASEPATH/base.apk 2>&1); then
+if ! op=$(nsenter -t1 -m -- mount -o bind $RVPATH $BASEPATH/base.apk 2>&1); then
 	ui_print "ERROR: Mount failed!"
 	ui_print "$op"
 fi
