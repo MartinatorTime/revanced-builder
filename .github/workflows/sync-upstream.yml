@@ -1,0 +1,36 @@
+name: Sync with Upstream
+
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Fetch upstream
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git remote add upstream https://github.com/j-hc/revanced-magisk-module.git
+        git fetch upstream
+
+    - name: Rebase changes
+      run: |
+        git fetch origin main
+        git merge origin/main
+        git rebase -Xtheirs upstream/main
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        force: true
